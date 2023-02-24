@@ -13,6 +13,15 @@ using namespace std;
 typedef string listType;
 
 //Function Prototypes
+void display(ostream& out, ToDoList<listType> list);
+void menu(ToDoList<listType> l);
+int getPriority();
+listType getTask();
+int getPos();
+char menu_gui();
+void Menu_Format(char* a);
+void Title_Format(char* a);
+bool confirm_quit(string outfile, ToDoList<listType>* l);
 
 
 #endif

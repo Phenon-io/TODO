@@ -1,4 +1,3 @@
-#include "ToDoList.h"
 template<class ItemType>
 ToDoList<ItemType>::ToDoList() {
     itemCount = 0;
@@ -7,7 +6,6 @@ ToDoList<ItemType>::ToDoList() {
 template<class ItemType>
 ToDoList<ItemType>::ToDoList(const ToDoList& rhs) {
     itemCount = rhs.itemCount;
-    maxItems = rhs.maxItems;
     if (rhs.headPtr == nullptr) {
         headPtr = nullptr;
         return this;
@@ -23,8 +21,8 @@ ToDoList<ItemType>::ToDoList(const ToDoList& rhs) {
         curPtr = curPtr->getNext();
         newNodePtr = newNodePtr->getNext();
     }
+    return this;
 }
-
 template<class ItemType>
 bool ToDoList<ItemType>::isEmpty() const {
     return itemCount == 0;
@@ -33,7 +31,6 @@ template<class ItemType>
 int ToDoList<ItemType>::getLength() const {
     return itemCount;
 }
-
 template<class ItemType>
 bool ToDoList<ItemType>::insert(int newPosition, const ItemType& newEntry) {
     Node<ItemType>* newNodePtr = new Node<ItemType>(); //create new node
@@ -44,7 +41,7 @@ bool ToDoList<ItemType>::insert(int newPosition, const ItemType& newEntry) {
         cout << "Position cannot be less than or equal to zero." << endl;
         return false;
     }
-    if (newPosition > ItemCount) {
+    if (newPosition > itemCount) {
         cout << "Position outside of list bounds." << endl;
         return false;
     }
@@ -52,7 +49,7 @@ bool ToDoList<ItemType>::insert(int newPosition, const ItemType& newEntry) {
         newNodePtr->setNext(tmpPtr);
         headPtr = newNodePtr;
     }
-    for (int i = 2; i <= ItemCount && curPtr != nullptr; i++) {
+    for (int i = 2; i <= itemCount && curPtr != nullptr; i++) {
         curPtr = curPtr->getNext();
         if (i == newPosition) {
             newNodePtr->setNext(curPtr);
@@ -64,7 +61,6 @@ bool ToDoList<ItemType>::insert(int newPosition, const ItemType& newEntry) {
     itemCount++;
     return true;
 }
-
 template<class ItemType>
 bool ToDoList<ItemType>::remove(const ItemType& anEntry) {
     bool found = false;
@@ -79,7 +75,7 @@ bool ToDoList<ItemType>::remove(const ItemType& anEntry) {
         headPtr = curPtr->getNext();
     }
     // guard clause in for loop statement
-    for (int i = 2; i <= ItemCount && !found && (curPtr != nullptr); i++) {
+    for (int i = 2; i <= itemCount && !found && (curPtr != nullptr); i++) {
         curPtr = curPtr->getNext();
         //find object
         if (curPtr->getItem() == anEntry) {
@@ -112,15 +108,14 @@ void ToDoList<ItemType>::clear() {
     }
     cout << "The list has been completed." << endl;
 }
-
 template<class ItemType>
 ItemType ToDoList<ItemType>::getEntry(int position)const {
     Node<ItemType>* curPtr = headPtr; // Holds pos
     // Prefer descriptive throws
     if (isEmpty()) throw "Empty List, cannot return items.";
     if (position < 0) throw "Position cannot be less than or equal to zero.";
-    if (position > ItemCount) throw "Position outside of list bounds.";
-    else for (int i = 1; i <= ItemCount; i++) {
+    if (position > itemCount) throw "Position outside of list bounds.";
+    else for (int i = 1; i <= itemCount; i++) {
         if (i == position) return curPtr->getItem();
         else curPtr = curPtr->getNext();
     }
@@ -129,7 +124,7 @@ ItemType ToDoList<ItemType>::getEntry(int position)const {
 template<class ItemType>
 ItemType ToDoList<ItemType>::replace(int position, const ItemType& newEntry) {
     if (isEmpty()) insert(1, newEntry);
-    if (position > ItemCount) throw "Position outside of list bounds.";
+    if (position > itemCount) throw "Position outside of list bounds.";
     else {
         remove(getEntry(position));
         insert(position, newEntry);
@@ -137,8 +132,6 @@ ItemType ToDoList<ItemType>::replace(int position, const ItemType& newEntry) {
     }
 
 }
-
-
 template<class ItemType>
 ToDoList<ItemType>::~ToDoList() {
     Node<ItemType>* curPtr = headPtr; // Holds pos
@@ -146,6 +139,6 @@ ToDoList<ItemType>::~ToDoList() {
         remove(curPtr->getItem());
         curPtr = headPtr;
     }
-    ItemCount = 0;
+    itemCount = 0;
     headPtr = nullptr;
 }

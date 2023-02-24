@@ -4,10 +4,10 @@ using namespace std;
 #include "ListInterface.h"
 #include "Node.h"
 template<class ItemType>
-class ToDoList : public BagInterface<ItemType> {
+class ToDoList : public ListInterface<ItemType> {
 private:
 	Node<ItemType>* headPtr;
-	int ItemCount;
+	int itemCount;
 public:
 	ToDoList();
 	ToDoList(const ToDoList&);
