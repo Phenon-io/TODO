@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TODO.cpp">
+    <ClCompile Include="Todo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
@@ -33,6 +33,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ToDoList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Todo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

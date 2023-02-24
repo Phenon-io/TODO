@@ -1,6 +1,5 @@
 #ifndef TO_DO_LIST
 #define TO_DO_LIST
-#include <vector>
 using namespace std;
 #include "ListInterface.h"
 #include "Node.h"
@@ -14,7 +13,7 @@ public:
 	ToDoList(const ToDoList&);
 	bool isEmpty() const;
 	int getLength() const;
-	bool insert(const ItemType& newEntry);
+	bool insert(int newPosition, const ItemType& newEntry);
 	bool remove(const ItemType& newEntry);
 	void clear();
 	ItemType getEntry(int position) const;

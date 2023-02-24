@@ -35,11 +35,32 @@ int ToDoList<ItemType>::getLength() const {
 }
 
 template<class ItemType>
-bool ToDoList<ItemType>::insert(const ItemType& newEntry) {
+bool ToDoList<ItemType>::insert(int newPosition, const ItemType& newEntry) {
     Node<ItemType>* newNodePtr = new Node<ItemType>(); //create new node
+    Node<ItemType>* curPtr = headPtr; 
+    Node<ItemType>* tmpPtr = headPtr;     // holds headptr
     newNodePtr->setItem(newEntry); // new node contains new item
-    newNodePtr->setNext(headPtr); // new node points to chain
-    headPtr = newNodePtr; // new node is now first node
+    if (newPosition <= 0) {
+        cout << "Position cannot be less than or equal to zero." << endl;
+        return false;
+    }
+    if (newPosition > ItemCount) {
+        cout << "Position outside of list bounds." << endl;
+        return false;
+    }
+    if (newPosition == 1) {
+        newNodePtr->setNext(tmpPtr);
+        headPtr = newNodePtr;
+    }
+    for (int i = 2; i <= ItemCount && curPtr != nullptr; i++) {
+        curPtr = curPtr->getNext();
+        if (i == newPosition) {
+            newNodePtr->setNext(curPtr);
+            tmpPtr->setNext(newNodePtr);
+            curPtr = nullptr;
+        }
+        else tmpPtr = tmpPtr->getNext();
+    }
     itemCount++;
     return true;
 }
@@ -47,52 +68,84 @@ bool ToDoList<ItemType>::insert(const ItemType& newEntry) {
 template<class ItemType>
 bool ToDoList<ItemType>::remove(const ItemType& anEntry) {
     bool found = false;
-    Node<ItemType>* curPtr = headPtr; // temporary pointer
-    Node<ItemType>* tempPtr = curPtr;
+    Node<ItemType>* curPtr = headPtr; // Holds pos
+    Node<ItemType>* tmpPtr = headPtr; // Holds node to delete or other movable
 
+    // Can't search an empty list
+    if (isEmpty()) return found;
     //find object, first try
     if (curPtr->getItem() == anEntry) {
         found = true;
+        headPtr = curPtr->getNext();
     }
-    for (int i = 1; i < ItemCount+1 && !found && (curPtr != nullptr); i++) {
+    // guard clause in for loop statement
+    for (int i = 2; i <= ItemCount && !found && (curPtr != nullptr); i++) {
         curPtr = curPtr->getNext();
         //find object
         if (curPtr->getItem() == anEntry) {
+            tmpPtr->setNext(curPtr->getNext);
             found = true;
         }
-        else {
-            curPtr = curPtr->getNext();
-            tempPtr = tempPtr->getNext();
-        }
+        else tmpPtr = tmpPtr->getNext();
     }
-    //swap with first item
-    // This section needs an update as the swaps need to iterate
-    // from the last item until they reach the item in question. 
-        if (found) {
-            // curPtr will be at the node to remove, 
-            // we want a tempPtr at the previous item,
-            // and then we can set the previous items next to the item after curPtr
-            // effectively removing it without changing order
-            tempPtr->setNext(curPtr->getNext());
-            // prepare to disconnect first node
-            Node<ItemType>* nodeToDeletePtr = curPtr;
+    
+    if (found) {
+        // if found, we've already allocated prev node via tmpPtr
+        // now just to delete curPtr's node
+        // prepare to disconnect first node
+        Node<ItemType>* nodeToDeletePtr = curPtr;
             
-            // return node to the system
-            nodeToDeletePtr->setNext(nullptr);
-            delete nodeToDeletePtr;
-            nodeToDeletePtr = nullptr;
-            itemCount--;
-        }
+        // return node to the system
+        nodeToDeletePtr->setNext(nullptr);
+        delete nodeToDeletePtr;
+        nodeToDeletePtr = nullptr;
+        itemCount--;
+    }
     return found;
 }
+template<class ItemType>
+void ToDoList<ItemType>::clear() {
+    Node<ItemType>* curPtr = headPtr; // Holds pos
+    while(!isEmpty()) {
+        remove(curPtr->getItem());
+        curPtr = headPtr;
+    }
+    cout << "The list has been completed." << endl;
+}
 
+template<class ItemType>
+ItemType ToDoList<ItemType>::getEntry(int position)const {
+    Node<ItemType>* curPtr = headPtr; // Holds pos
+    // Prefer descriptive throws
+    if (isEmpty()) throw "Empty List, cannot return items.";
+    if (position < 0) throw "Position cannot be less than or equal to zero.";
+    if (position > ItemCount) throw "Position outside of list bounds.";
+    else for (int i = 1; i <= ItemCount; i++) {
+        if (i == position) return curPtr->getItem();
+        else curPtr = curPtr->getNext();
+    }
+}
+
+template<class ItemType>
+ItemType ToDoList<ItemType>::replace(int position, const ItemType& newEntry) {
+    if (isEmpty()) insert(1, newEntry);
+    if (position > ItemCount) throw "Position outside of list bounds.";
+    else {
+        remove(getEntry(position));
+        insert(position, newEntry);
+
+    }
+
+}
 
 
 template<class ItemType>
 ToDoList<ItemType>::~ToDoList() {
-    Node<ItemType>* curPtr = headPtr;
-    while (curPtr != nullptr) {
-        Node<ItemType>* deletePtr = curPtr->getNext();
-        delete deletePtr;
+    Node<ItemType>* curPtr = headPtr; // Holds pos
+    while (!isEmpty()) {
+        remove(curPtr->getItem());
+        curPtr = headPtr;
     }
+    ItemCount = 0;
+    headPtr = nullptr;
 }

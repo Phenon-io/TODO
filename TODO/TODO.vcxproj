@@ -128,10 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="TODO.cpp" />
+    <ClCompile Include="Todo.cpp" />
     <ClCompile Include="ToDoList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Todo.h" />
     <ClInclude Include="ListInterface.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ToDoList.h" />
